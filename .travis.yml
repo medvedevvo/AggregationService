@@ -3,8 +3,18 @@ solution: "./AggregationService/AggregationService.sln"
 mono: none
 dotnet: 2.0.0
 build: trusty
+sudo: required
+dist: trusty
 notifications:
   email: false
+
+install:
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo sh -c 'echo "deb [arch=amd64] https://apt-mo.trafficmanager.net/repos/dotnet/ trusty main" > /etc/apt/sources.list.d/dotnetdev.list'; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-key adv --keyserver apt-mo.trafficmanager.net --recv-keys 417A0893; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get update; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install dotnet-dev-2.0.0-preview2-003121 -y; fi  
+  - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
+  
 jobs:
   include:
   - stage: build
